@@ -9,6 +9,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import com.googlecode.objectify.ObjectifyService;
 
 public class GuiceServletConfig extends GuiceServletContextListener {
 
@@ -17,6 +18,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
         return Guice.createInjector(new ServletModule() {
             @Override
             public void configureServlets() {
+                ObjectifyService.register(Sprocket.class);
                 install(new TransactionsModule());
                 serve("/").with(TransactionsDemo.class);
             }

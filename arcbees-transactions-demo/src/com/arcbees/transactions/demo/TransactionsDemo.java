@@ -40,16 +40,21 @@ public class TransactionsDemo extends HttpServlet {
 
         Objectify objectify = objectifyProvider.get();
 
-        if (objectify != null) {
-            logger.info("objectify was initialized");
-            logger.info("objectify instance in servlet: " + objectify.toString());
+        if (objectify == null) {
+            throw new ServletException("objectify was not initialized");
         }
 
-        throw new IOException("foobar");
+        logger.info("objectify was initialized");
+        logger.info("objectify instance in servlet: " + objectify.toString());
 
-        //logger.info("forwarding request");
+        Sprocket sprocket = new Sprocket("MySprocket");
+        objectify.put(sprocket);
 
-        //request.getRequestDispatcher("transactionsDemo.jsp").forward(request, response);
+        //throw new IOException("testing to make sure exceptions cause a rollback");
+
+        logger.info("forwarding request");
+
+        request.getRequestDispatcher("transactionsDemo.jsp").forward(request, response);
     }
 
 }
