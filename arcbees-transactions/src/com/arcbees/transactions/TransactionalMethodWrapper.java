@@ -4,14 +4,13 @@
 
 package com.arcbees.transactions;
 
-import com.google.inject.Key;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +24,9 @@ public class TransactionalMethodWrapper implements MethodInterceptor {
     @Named("transactionWrapScope")
     SimpleScope scope;
 
+    @Inject
+    Provider<Objectify> objectifyProvider;
+
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         Objectify objectify = null;
@@ -33,8 +35,8 @@ public class TransactionalMethodWrapper implements MethodInterceptor {
         scope.enter();
         try {
             logger.info("injecting objectify instance");
-            objectify = ObjectifyService.beginTransaction();
-            scope.seed(Key.get(Objectify.class), objectify);
+            objectify = objectifyProvider.get();
+            logger.info("objectify instance in wrapper: " + objectify.toString());
             logger.info("invoking method");
             return methodInvocation.proceed();
         } catch (Throwable throwable) {

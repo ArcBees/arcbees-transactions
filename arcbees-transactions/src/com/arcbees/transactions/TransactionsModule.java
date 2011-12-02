@@ -8,6 +8,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.impl.ObjectifyImpl;
 
 public class TransactionsModule extends AbstractModule {
 
@@ -19,7 +20,7 @@ public class TransactionsModule extends AbstractModule {
                 .annotatedWith(Names.named("transactionWrapScope"))
                 .toInstance(transactionWrapScope);
 
-        //bind(Objectify.class).in(TransactionWrapScoped.class);
+        bind(Objectify.class).toProvider(ObjectifyProvider.class).in(TransactionWrapScoped.class);
 
         TransactionalMethodWrapper transactionalMethodWrapper = new TransactionalMethodWrapper();
         requestInjection(transactionalMethodWrapper);

@@ -5,8 +5,10 @@
 package com.arcbees.transactions.demo;
 
 import com.arcbees.transactions.Transactional;
+import com.googlecode.objectify.Objectify;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,11 +22,14 @@ public class TransactionsDemo extends HttpServlet {
 
     private final Logger logger;
 
+    private final Provider<Objectify> objectifyProvider;
+
     // TODO find the right way to inject the Objectify instance, since we can't have it be a singleton
 
     @Inject
-    public TransactionsDemo(final Logger logger) {
+    public TransactionsDemo(final Logger logger, final Provider<Objectify> objectifyProvider) {
         this.logger = logger;
+        this.objectifyProvider = objectifyProvider;
     }
 
     @Override
@@ -34,11 +39,12 @@ public class TransactionsDemo extends HttpServlet {
 
         logger.info("entered method");
 
-        //Objectify objectify = objectifyProvider.get();
+        Objectify objectify = objectifyProvider.get();
 
-//        if (objectify != null) {
-//            logger.info("objectify was initialized");
-//        }
+        if (objectify != null) {
+            logger.info("objectify was initialized");
+            logger.info("objectify instance in servlet: " + objectify.toString());
+        }
 
 //        Objectify objectify = ObjectifyService.factory().begin();
 //
