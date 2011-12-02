@@ -4,11 +4,11 @@
 
 package com.arcbees.transactions;
 
+import com.google.inject.Inject;
 import com.googlecode.objectify.Objectify;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.logging.Level;
@@ -25,6 +25,7 @@ public class TransactionalMethodWrapper implements MethodInterceptor {
     SimpleScope scope;
 
     @Inject
+    @TransactionalObjectify
     Provider<Objectify> objectifyProvider;
 
     @Override

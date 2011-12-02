@@ -5,10 +5,11 @@
 package com.arcbees.transactions;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.impl.ObjectifyImpl;
+import com.googlecode.objectify.ObjectifyService;
 
 public class TransactionsModule extends AbstractModule {
 
@@ -20,12 +21,17 @@ public class TransactionsModule extends AbstractModule {
                 .annotatedWith(Names.named("transactionWrapScope"))
                 .toInstance(transactionWrapScope);
 
-        bind(Objectify.class).toProvider(ObjectifyProvider.class).in(TransactionWrapScoped.class);
-
         TransactionalMethodWrapper transactionalMethodWrapper = new TransactionalMethodWrapper();
         requestInjection(transactionalMethodWrapper);
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(Transactional.class),
                 transactionalMethodWrapper);
+    }
+
+    @Provides
+    @TransactionalObjectify
+    @TransactionWrapScoped
+    Objectify provideTransactionalObjectify() {
+        return ObjectifyService.beginTransaction();
     }
 
 }

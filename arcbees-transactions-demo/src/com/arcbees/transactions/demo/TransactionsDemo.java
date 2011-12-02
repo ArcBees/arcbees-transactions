@@ -5,9 +5,10 @@
 package com.arcbees.transactions.demo;
 
 import com.arcbees.transactions.Transactional;
+import com.arcbees.transactions.TransactionalObjectify;
+import com.google.inject.Inject;
 import com.googlecode.objectify.Objectify;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
@@ -24,10 +25,8 @@ public class TransactionsDemo extends HttpServlet {
 
     private final Provider<Objectify> objectifyProvider;
 
-    // TODO find the right way to inject the Objectify instance, since we can't have it be a singleton
-
     @Inject
-    public TransactionsDemo(final Logger logger, final Provider<Objectify> objectifyProvider) {
+    public TransactionsDemo(final Logger logger, @TransactionalObjectify final Provider<Objectify> objectifyProvider) {
         this.logger = logger;
         this.objectifyProvider = objectifyProvider;
     }
@@ -46,12 +45,6 @@ public class TransactionsDemo extends HttpServlet {
             logger.info("objectify instance in servlet: " + objectify.toString());
         }
 
-//        Objectify objectify = ObjectifyService.factory().begin();
-//
-//        Query<Sprocket> query = objectify.query(Sprocket.class).filter("name", "Foobar").order("-name");
-//        logger.info("Before executing get()");
-//        Sprocket sprocket = query.get();
-//        logger.info("After executing get()");
         throw new IOException("foobar");
 
         //logger.info("forwarding request");
